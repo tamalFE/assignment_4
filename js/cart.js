@@ -37,7 +37,9 @@ class Cart {
 }
 
 class UI {
-  constructor() {}
+  constructor(cart) {
+    this.cart = cart;
+  }
 
   updateCart(items = []) {
     if (items.length === 0) {
@@ -62,18 +64,42 @@ class UI {
           <td>
             <button class="btn btn-danger">-</button>
             <span>${item.quantity}</span>
-            <button class="btn btn-info">+</button>
+            <button class="btn btn-info add-btn" data-id="${item.id}"
+            data-image="${item.image}"
+            data-name="${item.productName}"
+            data-price="${item.unitPrice}">+</button>
           </td>
         </tr>
       `;
     });
     cartTable.innerHTML = rows;
+    const addBtns = cartTable.querySelectorAll('.add-btn');
+    this.attachAddEvent(addBtns);
+  }
+
+  attachAddEvent(buttons) {
+    console.log(this.cart.items);
+    if (!buttons || !this.cart) return;
+    for (let i = 0; i < buttons.length; i++) {
+      buttons[i].addEventListener('click', (e) => {
+        const btn = e.target;
+        const dataset = btn.dataset;
+        this.cart.addItem({
+          id: Number(dataset.id),
+          price: Number(dataset.price),
+          productName: dataset.name,
+          unitPrice: Number(dataset.price),
+          image: dataset.image,
+        });
+        this.updateCart(this.cart.items);
+      });
+    }
   }
 }
 
 async function main() {
   const cart = new Cart();
-  const ui = new UI();
+  const ui = new UI(cart);
 
   // Create 3 Products for Now
   const tShirt = new Product(1, 'Blue T-Shirt', './asset/t-shirt.jpg', 500);
@@ -114,22 +140,7 @@ async function main() {
   });
 
   const addBtns = document.querySelectorAll('.add-btn');
-
-  for (let i = 0; i < addBtns.length; i++) {
-    addBtns[i].addEventListener('click', (e) => {
-      const btn = e.target;
-      const dataset = btn.dataset;
-      console.log(dataset);
-      cart.addItem({
-        id: Number(dataset.id),
-        price: Number(dataset.price),
-        productName: dataset.name,
-        unitPrice: Number(dataset.price),
-        image: dataset.image,
-      });
-      ui.updateCart(cart.items);
-    });
-  }
+  ui.attachAddEvent(addBtns);
 }
 
 main();
