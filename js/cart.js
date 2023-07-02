@@ -89,7 +89,7 @@ async function main() {
 
   products.forEach((product) => {
     productList.innerHTML += `
-      <div class="col-lg-4">
+      <div class="col-lg-6">
         <div class="card">
         <img src="${product.image}" alt="${product.productName}" />
           <div class="card-body">
@@ -99,7 +99,7 @@ async function main() {
             ${product.unitPrice}
             </p>
             <button
-              class="btn btn-success"
+              class="btn btn-success add-btn"
               data-id="${product.id}"
               data-image="${product.image}"
               data-name="${product.productName}"
@@ -113,17 +113,21 @@ async function main() {
     `;
   });
 
-  const addBtns = document.querySelectorAll('.add_btn');
+  const addBtns = document.querySelectorAll('.add-btn');
+
   for (let i = 0; i < addBtns.length; i++) {
     addBtns[i].addEventListener('click', (e) => {
       const btn = e.target;
       const dataset = btn.dataset;
+      console.log(dataset);
       cart.addItem({
-        ...dataset,
         id: Number(dataset.id),
         price: Number(dataset.price),
+        productName: dataset.name,
+        unitPrice: Number(dataset.price),
+        image: dataset.image,
       });
-      alert(JSON.stringify(cart.items, null, 2));
+      ui.updateCart(cart.items);
     });
   }
 }
