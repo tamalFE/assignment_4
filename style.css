@@ -59,16 +59,9 @@ body {
   justify-content: space-between;
 }
 
-/* h3 {
-  margin-top: 147px;
-  margin-bottom: 0;
-  font-size: 32px;
-} */
-
-.table {
-  margin-top: 20px;
-  margin-bottom: 5px;
-  text-align: center;
+.cart {
+  background-color: lightblue;
+  padding: 1rem;
 }
 
 .td_img {

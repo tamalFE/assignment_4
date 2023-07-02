@@ -1,6 +1,7 @@
 const productList = document.getElementById('product-list');
 const cartTable = document.getElementById('cart-table');
 const clearCart = document.getElementById('clear-cart');
+const cartTotal = document.getElementById('cart-total');
 
 class Product {
   constructor(id = 1, productName = '', image = '', unitPrice = 0) {
@@ -58,15 +59,25 @@ class UI {
     this.cart = cart;
   }
 
+  updateTotal() {
+    const total = this.cart.items.reduce((acc, curr) => {
+      return (acc += curr.quantity * curr.unitPrice);
+    }, 0);
+    cartTotal.innerText = `Total: BDT. ${total}`;
+  }
+
   updateCart(items = []) {
     if (items.length === 0) {
+      cartTotal.style.display = 'none';
       cartTable.innerHTML = `
-            <tr>
-                <p>No items in the cart!</p>
-            </tr>
-        `;
+      <tr>
+      <p>No items in the cart!</p>
+      </tr>
+      `;
       return;
     }
+
+    cartTotal.style.display = 'block';
 
     let rows = '';
     items.forEach((item, index) => {
@@ -97,6 +108,8 @@ class UI {
 
     const removeBtns = document.querySelectorAll('.remove-btn');
     this.attachRemoveEvent(removeBtns);
+
+    this.updateTotal();
   }
 
   attachAddEvent(buttons) {
