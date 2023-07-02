@@ -31,6 +31,23 @@ class Cart {
     }
   }
 
+  removeItem(id) {
+    if (!id) return;
+
+    const found = this.items.find((item) => item.id === id);
+
+    if (!found) return;
+
+    if (found.quantity > 1) {
+      const index = this.items.findIndex((item) => item.id === id);
+      this.items[index].quantity--;
+      return;
+    }
+
+    const newItems = this.items.filter((item) => item.id !== id);
+    this.items = newItems;
+  }
+
   clear() {
     this.items = [];
   }
@@ -62,7 +79,9 @@ class UI {
           </td>
           <td>${item.unitPrice}</td>
           <td>
-            <button class="btn btn-danger">-</button>
+            <button class="btn btn-danger remove-btn" data-id="${
+              item.id
+            }">-</button>
             <span>${item.quantity}</span>
             <button class="btn btn-info add-btn" data-id="${item.id}"
             data-image="${item.image}"
@@ -75,10 +94,12 @@ class UI {
     cartTable.innerHTML = rows;
     const addBtns = cartTable.querySelectorAll('.add-btn');
     this.attachAddEvent(addBtns);
+
+    const removeBtns = document.querySelectorAll('.remove-btn');
+    this.attachRemoveEvent(removeBtns);
   }
 
   attachAddEvent(buttons) {
-    console.log(this.cart.items);
     if (!buttons || !this.cart) return;
     for (let i = 0; i < buttons.length; i++) {
       buttons[i].addEventListener('click', (e) => {
@@ -91,6 +112,18 @@ class UI {
           unitPrice: Number(dataset.price),
           image: dataset.image,
         });
+        this.updateCart(this.cart.items);
+      });
+    }
+  }
+
+  attachRemoveEvent(buttons) {
+    if (!buttons || !this.cart) return;
+    for (let i = 0; i < buttons.length; i++) {
+      buttons[i].addEventListener('click', (e) => {
+        const btn = e.target;
+        const dataset = btn.dataset;
+        this.cart.removeItem(Number(dataset.id));
         this.updateCart(this.cart.items);
       });
     }
@@ -141,6 +174,9 @@ async function main() {
 
   const addBtns = document.querySelectorAll('.add-btn');
   ui.attachAddEvent(addBtns);
+
+  //   const removeBtns = document.querySelectorAll('.remove-btn');
+  //   ui.attachRemoveEvent(removeBtns);
 }
 
 main();
