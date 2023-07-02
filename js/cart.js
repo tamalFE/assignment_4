@@ -1,4 +1,6 @@
 const productList = document.getElementById('product-list');
+const cartTable = document.getElementById('cart-table');
+const clearCart = document.getElementById('clear-cart');
 
 class Product {
   constructor(id = 1, productName = '', image = '', unitPrice = 0) {
@@ -28,10 +30,51 @@ class Cart {
       this.items.push({ ...product, quantity: 1 });
     }
   }
+
+  clear() {
+    this.items = [];
+  }
+}
+
+class UI {
+  constructor() {}
+
+  updateCart(items = []) {
+    if (items.length === 0) {
+      cartTable.innerHTML = `
+            <tr>
+                <p>No items in the cart!</p>
+            </tr>
+        `;
+      return;
+    }
+
+    let rows = '';
+    items.forEach((item, index) => {
+      rows += `
+        <tr>
+          <th scope="row">${index}</th>
+          <td>${item.productName}</td>
+          <td>
+            <img class="td_img" src="${item.image}" alt="${item.productName}" />
+          </td>
+          <td>${item.unitPrice}</td>
+          <td>
+            <button>-</button>
+            <span>${item.quantity}</span>
+            <button>+</button>
+          </td>
+        </tr>
+      `;
+    });
+    cartTable.innerHTML = rows;
+  }
 }
 
 async function main() {
   const cart = new Cart();
+  const ui = new UI();
+
   // Create 3 Products for Now
   const tShirt = new Product(1, 'Blue T-Shirt', './asset/t-shirt.jpg', 500);
   const formalShirt = new Product(2, 'Gray Shirt', './asset/shirt.jpg', 600);
@@ -39,27 +82,14 @@ async function main() {
 
   const products = [tShirt, formalShirt, jeansPant];
 
+  clearCart.addEventListener('click', () => {
+    cart.clear();
+    ui.updateCart();
+  });
+
   products.forEach((product) => {
     productList.innerHTML += `
       <div class="col-lg-4">
-        <!-- <div class="card">
-          <div class="card-image">
-            <img src="${product.image}" alt="${product.productName}" />
-          </div>
-          <div class="card-content">
-            <h2 class="product-name">${product.productName}</h2>
-            <p class="product-price">${product.unitPrice} tk</p>
-            <button
-              class="add_btn"
-              data-id="${product.id}"
-              data-image="${product.image}"
-              data-name="${product.productName}"
-              data-price="${product.unitPrice}"
-              type="button">
-              Add to Cart
-            </button>
-          </div>
-        </div> -->
         <div class="card">
         <img src="${product.image}" alt="${product.productName}" />
           <div class="card-body">
