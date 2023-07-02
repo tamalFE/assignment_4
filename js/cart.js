@@ -53,16 +53,16 @@ class UI {
     items.forEach((item, index) => {
       rows += `
         <tr>
-          <th scope="row">${index}</th>
+          <th scope="row">${index + 1}</th>
           <td>${item.productName}</td>
           <td>
             <img class="td_img" src="${item.image}" alt="${item.productName}" />
           </td>
           <td>${item.unitPrice}</td>
           <td>
-            <button>-</button>
+            <button class="btn btn-danger">-</button>
             <span>${item.quantity}</span>
-            <button>+</button>
+            <button class="btn btn-info">+</button>
           </td>
         </tr>
       `;
@@ -114,7 +114,6 @@ async function main() {
   });
 
   const addBtns = document.querySelectorAll('.add_btn');
-
   for (let i = 0; i < addBtns.length; i++) {
     addBtns[i].addEventListener('click', (e) => {
       const btn = e.target;
@@ -124,7 +123,7 @@ async function main() {
         id: Number(dataset.id),
         price: Number(dataset.price),
       });
-      console.log('cart now:', cart.items);
+      alert(JSON.stringify(cart.items, null, 2));
     });
   }
 }
