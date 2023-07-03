@@ -143,7 +143,7 @@ class UI {
   }
 }
 
-async function main() {
+function main() {
   const cart = new Cart();
   const ui = new UI(cart);
 
@@ -151,8 +151,9 @@ async function main() {
   const tShirt = new Product(1, 'Blue T-Shirt', './asset/t-shirt.jpg', 500);
   const formalShirt = new Product(2, 'Gray Shirt', './asset/shirt.jpg', 600);
   const jeansPant = new Product(3, 'Blue Jeans', './asset/pant.jpg', 700);
+  const shoe = new Product(4, 'Sport Shoe', './asset/shoe.jpg', 800);
 
-  const products = [tShirt, formalShirt, jeansPant];
+  const products = [tShirt, formalShirt, jeansPant, shoe];
 
   clearCart.addEventListener('click', () => {
     cart.clear();
